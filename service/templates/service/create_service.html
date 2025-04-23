@@ -1,9 +1,88 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h1>Добавить услугу</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Сохранить</button>
-</form>
+<div class="container mt-4">
+    <h1 class="mb-4">Добавить услугу</h1>
+    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Поле "Название услуги" -->
+        <div class="mb-3">
+            <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
+            {{ form.title }}
+            <div class="invalid-feedback">
+                Пожалуйста, введите название услуги.
+            </div>
+        </div>
+
+        <!-- Поле "Описание услуги" -->
+        <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+            {{ form.description }}
+            <div class="invalid-feedback">
+                Пожалуйста, введите описание услуги.
+            </div>
+        </div>
+
+        <!-- Поле "Категория" -->
+        <div class="mb-3">
+            <label for="{{ form.category.id_for_label }}" class="form-label">{{ form.category.label }}</label>
+            {{ form.category }}
+            <div class="invalid-feedback">
+                Пожалуйста, выберите категорию.
+            </div>
+        </div>
+
+        <!-- Поле "Цена" -->
+        <div class="mb-3">
+            <label for="{{ form.price.id_for_label }}" class="form-label">{{ form.price.label }}</label>
+            <div class="input-group">
+                {{ form.price }}
+                <span class="input-group-text">руб.</span>
+            </div>
+            <div class="invalid-feedback">
+                Пожалуйста, укажите цену.
+            </div>
+        </div>
+
+        <!-- Поле "Изображение" (если есть) -->
+        {% if form.image %}
+        <div class="mb-3">
+            <label for="{{ form.image.id_for_label }}" class="form-label">{{ form.image.label }}</label>
+            {{ form.image }}
+            <div class="invalid-feedback">
+                Пожалуйста, загрузите изображение.
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Кнопка отправки формы -->
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Сохранить
+        </button>
+    </form>
+</div>
+
+<script>
+// Пример валидации формы с использованием Bootstrap
+(function () {
+    'use strict'
+
+    // Получаем все формы, к которым нужно применить кастомную валидацию Bootstrap
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Перебираем формы и предотвращаем отправку, если есть ошибки
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+})()
+</script>
 {% endblock %}
