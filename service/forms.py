@@ -3,36 +3,16 @@ from .models import Service, Review, Message
 from django.core.exceptions import ValidationError
 
 class ServiceForm(forms.ModelForm):
-    PRICE_CHOICES = [
-        ('fixed', 'Фиксированная цена'),
-        ('contract', 'Договорная цена'),
-    ]
-    
-    price_type = forms.ChoiceField(
-        choices=PRICE_CHOICES,
-        widget=forms.RadioSelect,
-        label='Тип цены',
-        initial='fixed'  # Установить фиксированную цену по умолчанию
-    )
-
-    price = forms.DecimalField(required=False, label='Цена', widget=forms.NumberInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Введите цену',
-        'style': 'width: 150px;'  # Устанавливаем меньшую ширину
-    }))
-
-    class Meta:  # Исправленный отступ
+    class Meta:
         model = Service
-        fields = ['title', 'description', 'category', 'price_type', 'price', 'location']
+        fields = ['title', 'category', 'location', 'description', 'price']
+        
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['title'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите название услуги'})
-        self.fields['description'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите описание услуги'})
-        self.fields['category'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Выберите категорию'})
-        self.fields['price_type'].widget.attrs.update({'class': 'form-check-input'})  # Для радио-кнопок
-        self.fields['price'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите цену'})
-        self.fields['location'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите город'})
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price is not None and price < 0:
+            raise forms.ValidationError("Цена не может быть отрицательной.")
+        return price
 
 
 class ReviewForm(forms.ModelForm):

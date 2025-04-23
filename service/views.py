@@ -25,19 +25,20 @@ def service_list(request):
 @login_required
 def create_service(request):
     if request.method == 'POST':
-        form = ServiceForm(request.POST, request.FILES)
+        form = ServiceForm(request.POST)
         if form.is_valid():
             service = form.save(commit=False)
             service.provider = request.user  # Установка текущего пользователя как провайдера
-            service.save()  # Сохранение услуги в базе данных
-            logger.info(f"Услуга '{service.title}' создана пользователем {request.user.username}.")
-            return redirect('home')  # Перенаправление на главную страницу или страницу деталей услуги
-        else:
-            logger.warning(f"Ошибка при создании услуги: {form.errors}")
+            service.save()
+            return redirect('service_list')  # Переход на страницу списка услуг
     else:
         form = ServiceForm()
-
     return render(request, 'service/create_service.html', {'form': form})
+
+@login_required
+def service_list(request):
+    services = Service.objects.all()
+    return render(request, 'service/service_list.html', {'services': services})
 
 
 def service_detail(request, service_id):
@@ -86,6 +87,30 @@ def chat(request, receiver_id):
     return render(request, 'service/chat.html', {'messages': messages, 'receiver': receiver})
 
 def search(request):
-    query = request.GET.get('q')
-    category = request.GET.get('category')
-    location = request.GET
+    query = request.GET.get('q', '')
+    category_name = request.GET.get('category', '')
+    location = request.GET.get('location', '')
+
+    services = Service.objects.all()
+
+    if query:
+        services = services.filter(title__icontains=query)
+    if category_name:
+        services = services.filter(category__name__icontains=category_name)
+    if location:
+        services = services.filter(location__icontains=location)
+
+    # Пагинация
+    paginator = Paginator(services, 10)  # 10 услуг на страницу
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    categories = Category.objects.all()
+
+    return render(request, 'service/search_results.html', {
+        'services': services,
+        'query': query,
+        'categories': categories,
+        'page_obj': page_obj,  # Передаем page_obj в контекст
+    })
+

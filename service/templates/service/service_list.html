@@ -1,25 +1,32 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
-<h1>Список услуг</h1>
-<div class="categories">
-    <h2>Категории</h2>
-    <ul>
-        {% for category in categories %}
-        <li>{{ category.name }}</li>
-        {% endfor %}
-    </ul>
-</div>
-<div class="services">
-    <h2>Услуги</h2>
-    <ul>
-        {% for service in services %}
-        <li>
-            <h3>{{ service.title }}</h3>
-            <p>{{ service.description }}</p>
-            <p>Цена: {{ service.price }}</p>
-        </li>
-        {% endfor %}
-    </ul>
+<div class="container mt-4">
+    <h1 class="mb-4">Список услуг</h1>
+    <a href="{% url 'create_service' %}" class="btn btn-primary mb-3">Добавить услугу</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Категория</th>
+                <th>Город</th>
+                <th>Описание</th>
+                <th>Цена</th>
+                <th>Дата создания</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.title }}</td>
+                <td>{{ service.category }}</td>
+                <td>{{ service.location }}</td>
+                <td>{{ service.description }}</td>
+                <td>{{ service.price }} руб.</td>
+                <td>{{ service.created_at|date:"d M Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

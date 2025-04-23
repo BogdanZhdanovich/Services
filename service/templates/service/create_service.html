@@ -8,20 +8,25 @@
 
         <!-- Отображение ошибок формы -->
         {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-                <ul>
+        <div class="alert alert-danger">
+            <ul>
                 {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
+                <li>{{ error }}</li>
                 {% endfor %}
-                </ul>
-            </div>
+            </ul>
+        </div>
         {% endif %}
 
         <!-- Поле "Название услуги" -->
         <div class="mb-3">
             <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
             {{ form.title }}
-            <div class="invalid-feedback" data-error="title">
+            {% if form.title.errors %}
+            <div class="alert alert-danger">
+                {{ form.title.errors|join:", " }}
+            </div>
+            {% endif %}
+            <div class="invalid-feedback">
                 Пожалуйста, введите название услуги.
             </div>
         </div>
@@ -30,16 +35,17 @@
         <div class="mb-3">
             <label for="{{ form.category.id_for_label }}" class="form-label">{{ form.category.label }}</label>
             {{ form.category }}
-            <div class="invalid-feedback" data-error="category">
+            <div class="invalid-feedback">
                 Пожалуйста, выберите категорию.
             </div>
         </div>
+        
 
         <!-- Поле "Город" -->
         <div class="mb-3">
             <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }}</label>
             {{ form.location }}
-            <div class="invalid-feedback" data-error="location">
+            <div class="invalid-feedback">
                 Пожалуйста, укажите город.
             </div>
         </div>
@@ -48,7 +54,7 @@
         <div class="mb-3">
             <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
             {{ form.description }}
-            <div class="invalid-feedback" data-error="description">
+            <div class="invalid-feedback">
                 Пожалуйста, введите описание услуги.
             </div>
         </div>
@@ -60,7 +66,7 @@
                 {{ form.price }}
                 <span class="input-group-text">руб.</span>
             </div>
-            <div class="invalid-feedback" data-error="price">
+            <div class="invalid-feedback">
                 Пожалуйста, укажите цену.
             </div>
         </div>
@@ -68,51 +74,35 @@
         <!-- Скрытое поле для передачи значения цены -->
         <input type="hidden" name="price" value="0" id="hidden-price">
 
-        <!-- Кнопки выбора цены -->
+        <!-- Кнопка выбора фиксированной цены -->
         <div class="mb-3">
-            <button type="button" class="btn btn-primary" id="fixed-price-button" onclick="selectFixedPrice()">Выбрать цену</button>
-            <button type="button" class="btn btn-secondary" id="contract-price-button" onclick="selectContractPrice()">Выбрать договорную цену</button>
-        </div>
-
-        <!-- Текст для отображения договорной цены -->
-        <div id="contract-price-text" style="display: none; margin-bottom: 10px;">
-            <span style="font-weight: normal;">
-                При договорной цене вы не указываете конкретную цену в объявлении, а даёте возможность покупателю предложить свою.
-            </span>
+            <button type="button" class="btn btn-primary" id="fixed-price-button" onclick="selectFixedPrice()">Выбрать фиксированную цену</button>
         </div>
 
         <script>
             function selectFixedPrice() {
                 const priceContainer = document.getElementById("price-container");
-                const contractPriceText = document.getElementById("contract-price-text");
                 const priceInput = document.getElementById("{{ form.price.id }}");
-                const hiddenPriceInput = document.getElementById("hidden-price");
+                const hiddenPriceInput = document.getElementById("hidden-price"); // Исправлено: убрана лишняя строка
 
                 // Показываем поле ввода цены
                 priceContainer.style.display = 'block';
-                contractPriceText.style.display = 'none';
 
                 // Включаем поле ввода
                 priceInput.disabled = false;
                 hiddenPriceInput.value = priceInput.value; // Устанавливаем значение скрытого поля
+
+                // Устанавливаем фокус на поле ввода цены
+                priceInput.focus();
             }
 
-            function selectContractPrice() {
-                const priceContainer = document.getElementById("price-container");
-                const contractPriceText = document.getElementById("contract-price-text");
-                const priceInput = document.getElementById("{{ form.price.id }}");
+            // Обновляем значение скрытого поля при изменении цены
+            document.getElementById("{{ form.price.id }}").addEventListener('input', function () {
                 const hiddenPriceInput = document.getElementById("hidden-price");
-
-                // Скрываем поле ввода цены
-                priceContainer.style.display = 'none';
-                contractPriceText.style.display = 'block';
-
-                // Отключаем поле ввода
-                priceInput.value = '';  // Сбрасываем значение поля
-                priceInput.disabled = true;  // Отключаем поле
-                hiddenPriceInput.value = '0'; // Устанавливаем значение скрытого поля
-            }
+                hiddenPriceInput.value = this.value; // Обновляем скрытое поле с текущим значением цены
+            });
         </script>
+
         <!-- Кнопка отправки формы -->
         <button type="submit" class="btn btn-success">Сохранить услугу</button>
     </form>
