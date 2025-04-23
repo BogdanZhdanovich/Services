@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Платформа для обмена услугами</h1>
+
+    <!-- Форма поиска -->
+    <form method="get" action="{% url 'search' %}" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <input type="text" name="q" class="form-control" placeholder="Поиск услуг">
+            </div>
+            <div class="col-md-3">
+                <select name="category" class="form-select">
+                    <option value="">Все категории</option>
+                    {% for category in categories %}
+                        <option value="{{ category.name }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="text" name="location" class="form-control" placeholder="Введите город">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Найти</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Список услуг -->
+    <div class="row">
+        {% for service in services %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'service_detail' service.id %}">{{ service.title }}</a>
+                        </h5>
+                        <p class="card-text">{{ service.description|truncatechars:100 }}</p>
+                        <p class="card-text"><small class="text-muted">Категория: {{ service.category.name }}</small></p>
+                        <p class="card-text"><small class="text-muted">Местоположение: {{ service.location }}</small></p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-center">Услуги не найдены.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

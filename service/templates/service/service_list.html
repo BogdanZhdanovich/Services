@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Список услуг</h1>
+<div class="categories">
+    <h2>Категории</h2>
+    <ul>
+        {% for category in categories %}
+        <li>{{ category.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="services">
+    <h2>Услуги</h2>
+    <ul>
+        {% for service in services %}
+        <li>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+            <p>Цена: {{ service.price }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

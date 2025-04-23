@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ service.title }}</h1>
+<p>{{ service.description }}</p>
+<p>Категория: {{ service.category.name }}</p>
+<p>Местоположение: {{ service.location }}</p>
+<h2>Отзывы</h2>
+{% for review in reviews %}
+    <div>
+        <p>Рейтинг: {{ review.rating }}</p>
+        <p>{{ review.comment }}</p>
+        <p>От: {{ review.reviewer.username }}</p>
+    </div>
+{% endfor %}
+<a href="{% url 'add_review' service.id %}">Добавить отзыв</a>
+<a href="{% url 'send_message' service.provider.id %}">Написать сообщение</a>
+{% endblock %}
