@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'service',
+    'users_and_accounts',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'home'  # Перенаправление после входа
+LOGIN_REDIRECT_URL = '/'  # Перенаправление после входа
 
-LOGOUT_REDIRECT_URL = 'home'  # Перенаправление после выхода
+LOGOUT_REDIRECT_URL = '/'  # Перенаправление после выхода
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

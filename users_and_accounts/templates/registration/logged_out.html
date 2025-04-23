@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">Выход из системы</h3>
+                </div>
+                <div class="card-body text-center">
+                    <!-- Сообщение о выходе -->
+                    <p class="lead">Вы успешно вышли из системы.</p>
+
+                    <!-- Ссылка для повторного входа -->
+                    <a href="{% url 'login' %}" class="btn btn-primary">Войти снова</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
