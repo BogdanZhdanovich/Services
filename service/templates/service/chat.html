@@ -1,15 +1,10 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}Чат{% endblock %}
+
 {% block content %}
-<h1>Чат с {{ receiver.username }}</h1>
-{% for message in messages %}
-    <div>
-        <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
-        <p><small>{{ message.timestamp }}</small></p>
-    </div>
-{% endfor %}
-<form method="post" action="{% url 'send_message' receiver.id %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Отправить</button>
-</form>
+<div class="container mt-4">
+    <h1>Чат</h1>
+    <p>Здесь будет содержимое чата.</p>
+</div>
 {% endblock %}

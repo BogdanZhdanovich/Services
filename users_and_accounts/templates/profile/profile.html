@@ -29,14 +29,14 @@
         </div>
     {% endif %}
     
-    <a href="{% url 'edit_profile' %}" class="btn btn-secondary">Редактировать профиль</a>
+    <a href="{% url 'edit_profile' %}" class="btn btn-primary">Редактировать профиль</a>
     
     <hr>
 
     <h2 class="mt-4">Ваши услуги</h2>
-    {% if user.services.all %}
+    {% if services %}
         <div class="row">
-            {% for service in user.services.all %}
+            {% for service in services %}
                 <div class="col-md-4 mb-4">
                     <div class="card">
                         <div class="card-body">
@@ -44,7 +44,11 @@
                                 <a href="{% url 'service_detail' service.id %}" class="text-decoration-none">{{ service.title }}</a>
                             </h5>
                             <p class="card-text">{{ service.description|truncatechars:150 }}</p>
-                            <p class="mb-0"><strong>Создано:</strong> {{ service.created_at }}</p>
+                            <p class="mb-0"><strong>Создано:</strong> {{ service.created_at|date:"d-m-Y H:i" }}</p>
+                            <div class="mt-2">
+                                <a href="{% url 'edit_service' service.id %}" class="btn btn-primary btn-sm">Редактировать</a>
+                                <a href="{% url 'confirm_delete_service' service.id %}" class="btn btn-danger btn-sm">Удалить</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,5 +59,27 @@
             У вас еще нет созданных услуг.
         </div>
     {% endif %}
-</div>
+    
+    <hr>
+
+    <h2 class="mt-4">Уведомления о сообщениях</h2>
+    {% if unread_messages %}
+        <div class="alert alert-info">
+            У вас есть {{ unread_messages.count }} новых сообщений.
+        </div>
+        <ul class="list-group">
+            {% for message in unread_messages %}
+                <li class="list-group-item">
+                    <strong>От:</strong> {{ message.sender.username }}<br>
+                    <strong>Сообщение:</strong> {{ message.content|truncatechars:50 }}<br>
+                    <a href="{% url 'message_detail' message.id %}" class="btn btn-link">Просмотреть</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-success" role="alert">
+            У вас нет новых сообщений.
+        </div>
+    {% endif %}
+</div>  
 {% endblock %}
