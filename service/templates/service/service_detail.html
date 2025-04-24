@@ -2,16 +2,36 @@
 {% block content %}
 <h1>{{ service.title }}</h1>
 <p>{{ service.description }}</p>
-<p>Категория: {{ service.category.name }}</p>
-<p>Местоположение: {{ service.location }}</p>
+
+<p>Категория: 
+    {% if service.category %}
+        {{ service.category.name }}
+    {% else %}
+        Не указана
+    {% endif %}
+</p>
+
+<p>Местоположение: 
+    {% if service.location %}
+        {{ service.location }}
+    {% else %}
+        Не указано
+    {% endif %}
+</p>
+
 <h2>Отзывы</h2>
-{% for review in reviews %}
-    <div>
-        <p>Рейтинг: {{ review.rating }}</p>
-        <p>{{ review.comment }}</p>
-        <p>От: {{ review.reviewer.username }}</p>
-    </div>
-{% endfor %}
+{% if reviews %}
+    {% for review in reviews %}
+        <div class="review">
+            <p>Рейтинг: {{ review.rating }}</p>
+            <p>{{ review.comment }}</p>
+            <p>От: {{ review.reviewer.username }}</p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Нет отзывов для этой услуги.</p>
+{% endif %}
+
 <a href="{% url 'add_review' service.id %}">Добавить отзыв</a>
 <a href="{% url 'send_message' service.provider.id %}">Написать сообщение</a>
 {% endblock %}

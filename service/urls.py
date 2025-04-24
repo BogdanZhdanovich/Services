@@ -10,4 +10,5 @@ urlpatterns = [
     path('service/<int:service_id>/add_review/', views.add_review, name='add_review'),
     path('send_message/<int:receiver_id>/', views.send_message, name='send_message'),
     path('chat/<int:receiver_id>/', views.chat, name='chat'),
+    path('create/', views.create_service, name='create_service'),
 ]

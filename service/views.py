@@ -26,7 +26,7 @@ def service_list(request):
 def create_service(request):
     try:
         if request.method == 'POST':
-            form = ServiceForm(request.POST)
+            form = ServiceForm(request.POST, request.FILES)
             if form.is_valid():
                 service = form.save(commit=False)
                 service.provider = request.user
@@ -37,13 +37,16 @@ def create_service(request):
             form = ServiceForm()
         return render(request, 'service/create_service.html', {'form': form})
     except Exception as e:
-        logger.error(f"Ошибка при создании услуги: {e}")
-        return render(request, 'service/error.html', {'message': 'Произошла ошибка при создании услуги.'})
+        logger.error(f"Ошибка при создании услуги: {e}", exc_info=True)
+        return render(request, 'service/error.html', {'message': 'Произошла ошибка при создании услуги. Пожалуйста, попробуйте позже.'})
+
+
 
 def service_detail(request, service_id):
     service = get_object_or_404(Service.objects.select_related('provider'), id=service_id)
     reviews = service.reviews.select_related('reviewer').all()
     return render(request, 'service/service_detail.html', {'service': service, 'reviews': reviews})
+
 
 @login_required
 def add_review(request, service_id):
@@ -66,6 +69,8 @@ def add_review(request, service_id):
     except Exception as e:
         logger.error(f"Ошибка при добавлении отзыва: {e}")
         return render(request, 'service/error.html', {'message': 'Произошла ошибка при добавлении отзыва.'})
+
+
 
 @login_required
 def send_message(request, receiver_id):
@@ -106,19 +111,29 @@ def search(request):
     services = Service.objects.all()
 
     if not (query or category or location):
-        return render(request, 'service/search_results.html', {'page_obj': None, 'query': query})
+        return render(request, 'service/search_results.html', {'page_obj': None, 'query': query, 'message': "Пожалуйста, введите запрос."})
 
     if query:
         services = services.filter(
             Q(title__icontains=query) | Q(description__icontains=query)
         )
     if category:
-        services = services.filter(category__name__icontains=category)
+        services = services.filter(category__icontains=category)  # Убедитесь, что category - это строка
     if location:
         services = services.filter(location__icontains=location)
 
-    paginator = Paginator(services, 10)
+    # Удаление дубликатов, если это необходимо
+    services = services.distinct()
+
+    # Пагинация
+    paginator = Paginator(services, 10)  # 10 услуг на странице
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'service/search_results.html', {'page_obj': page_obj, 'query': query})
+    return render(request, 'service/search_results.html', {
+        'page_obj': page_obj,
+        'query': query,
+        'category': category,
+        'location': location,
+        'message': "Ничего не найдено." if not page_obj else None,
+    })
