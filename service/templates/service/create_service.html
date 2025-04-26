@@ -5,22 +5,13 @@
     <h1 class="mb-4">Добавить услугу</h1>
     <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <!-- Поле "Название услуги" -->
         <div class="mb-3">
             <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
             {{ form.title }}
             <div class="invalid-feedback" data-error="title">
                 Пожалуйста, введите название услуги.
-            </div>
-        </div>
-
-        <!-- Поле "Описание услуги" -->
-        <div class="mb-3">
-            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
-            {{ form.description }}
-            <div class="invalid-feedback" data-error="description">
-                Пожалуйста, введите описание услуги.
             </div>
         </div>
 
@@ -33,17 +24,6 @@
             </div>
         </div>
 
-        <!-- Поле "Цена" -->
-        <div class="mb-3">
-            <label for="{{ form.price.id_for_label }}" class="form-label">{{ form.price.label }}</label>
-            <div class="input-group">
-                {{ form.price }}
-                <span class="input-group-text">руб.</span>
-            </div>
-            <div class="invalid-feedback" data-error="price">
-                Пожалуйста, укажите цену.
-            </div>
-        </div>
 
         <!-- Поле "Город" -->
         <div class="mb-3">
@@ -54,16 +34,76 @@
             </div>
         </div>
 
-        <!-- Поле "Изображение" (если есть) -->
-        {% if form.image %}
+
+        <!-- Поле "Описание услуги" -->
         <div class="mb-3">
-            <label for="{{ form.image.id_for_label }}" class="form-label">{{ form.image.label }}</label>
-            {{ form.image }}
-            <div class="invalid-feedback" data-error="image">
-                Пожалуйста, загрузите изображение.
+            <label for="{{ form.description.id_for_label }}" class="form-label">{{ form.description.label }}</label>
+            {{ form.description }}
+            <div class="invalid-feedback" data-error="description">
+                Пожалуйста, введите описание услуги.
             </div>
         </div>
-        {% endif %}
+
+
+        <!-- Поле "Цена" -->
+        <div class="mb-3" id="price-container">
+            <label for="{{ form.price.id_for_label }}" class="form-label">{{ form.price.label }}</label>
+            <div class="input-group">
+                {{ form.price }}
+                <span class="input-group-text">руб.</span>
+            </div>
+            <div class="invalid-feedback" data-error="price">
+                Пожалуйста, укажите цену.
+            </div>
+        </div>
+
+        <!-- Кнопки выбора цены -->
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary" id="fixed-price-button" onclick="selectFixedPrice()">Выбрать
+                цену</button>
+            <button type="button" class="btn btn-secondary" id="contract-price-button"
+                onclick="selectContractPrice()">Выбрать договорную цену</button>
+        </div>
+
+        <!-- Текст для отображения договорной цены -->
+        <div id="contract-price-text" style="display: none; margin-bottom: 10px;">
+            <span style="font-weight: normal;">
+                При договорной цене вы не указываете конкретную цену в объявлении, а даёте возможность покупателю
+                предложить свою.
+            </span>
+        </div>
+
+
+        <script>
+            function selectFixedPrice() {
+                const priceContainer = document.getElementById("price-container");
+                const contractPriceText = document.getElementById("contract-price-text");
+                const priceInput = document.getElementById("{{ form.price.id_for_label }}");
+
+                // Показываем поле ввода цены
+                priceContainer.style.display = 'block';
+                contractPriceText.style.display = 'none';
+
+                // Включаем поле ввода
+                priceInput.disabled = false;
+            }
+
+            function selectContractPrice() {
+                const priceContainer = document.getElementById("price-container");
+                const contractPriceText = document.getElementById("contract-price-text");
+                const priceInput = document.getElementById("{{ form.price.id_for_label }}");
+
+                // Скрываем поле ввода цены
+                priceContainer.style.display = 'none';
+
+                // Показываем текст "Договорная цена"
+                contractPriceText.style.display = 'block';
+
+                // Отключаем поле ввода
+                priceInput.value = '';  // Сбрасываем значение поля
+                priceInput.disabled = true;  // Отключаем поле
+            }
+        </script>
 
         <!-- Кнопки -->
         <div class="d-flex justify-content-between">
@@ -78,32 +118,32 @@
 </div>
 
 <script>
-// Инициализация валидации формы
-(function () {
-    'use strict'
+    // Инициализация валидации формы
+    (function () {
+        'use strict'
 
-    // Получаем все формы, к которым нужно применить кастомную валидацию
-    var forms = document.querySelectorAll('.needs-validation')
+        // Получаем все формы, к которым нужно применить кастомную валидацию
+        var forms = document.querySelectorAll('.needs-validation')
 
-    // Перебираем формы и предотвращаем отправку, если есть ошибки
-    Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-
-            // Показываем кастомные сообщения об ошибках
-            form.querySelectorAll(':invalid').forEach(function (field) {
-                var errorElement = form.querySelector(`[data-error="${field.id}"]`);
-                if (errorElement) {
-                    errorElement.textContent = field.validationMessage || 'Пожалуйста, заполните это поле.';
+        // Перебираем формы и предотвращаем отправку, если есть ошибки
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
                 }
-            });
 
-            form.classList.add('was-validated')
-        }, false)
-    })
-})()
+                // Показываем кастомные сообщения об ошибках
+                form.querySelectorAll(':invalid').forEach(function (field) {
+                    var errorElement = form.querySelector(`[data-error="${field.id}"]`);
+                    if (errorElement) {
+                        errorElement.textContent = field.validationMessage || 'Пожалуйста, заполните это поле.';
+                    }
+                });
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
 </script>
 {% endblock %}

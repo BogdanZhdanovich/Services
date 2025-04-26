@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'service',
     'users_and_accounts',
+    'crispy_forms',
+    'crispy_bootstrap5'
 ]
 
 MIDDLEWARE = [
@@ -136,3 +138,5 @@ LOGIN_REDIRECT_URL = '/'  # Перенаправление после входа
 LOGOUT_REDIRECT_URL = '/'  # Перенаправление после выхода
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5' 

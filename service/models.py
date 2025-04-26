@@ -8,7 +8,6 @@ class Service(models.Model):
     description = models.TextField(verbose_name="Описание услуги")
     category = models.CharField(max_length=100, verbose_name="Категория")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена", default=0)# Поле "Цена"
-    image = models.ImageField(upload_to='service_images/', verbose_name="Изображение", null=True, blank=True)  # Поле "Изображение"
     provider = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Поставщик услуги")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     location = models.CharField(max_length=100, default='', verbose_name="Город")

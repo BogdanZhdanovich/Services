@@ -35,11 +35,12 @@ def create_service(request):
                 return redirect('home')
         else:
             form = ServiceForm()
+        
         return render(request, 'service/create_service.html', {'form': form})
+    
     except Exception as e:
         logger.error(f"Ошибка при создании услуги: {e}", exc_info=True)
         return render(request, 'service/error.html', {'message': 'Произошла ошибка при создании услуги. Пожалуйста, попробуйте позже.'})
-
 
 
 def service_detail(request, service_id):

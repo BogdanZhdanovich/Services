@@ -1,31 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
+<nav>
+    <ul class="breadcrumb">
+        <li><a href="/">Главная</a></li>
+        <li class="separator"> &gt; </li> <!-- Стрелочка -->
+        <li><a href="{% url 'service_list' %}">Услуги</a></li>
+        <li class="separator"> &gt; </li> <!-- Стрелочка -->
+        <li class="active">{{ service.title }}</li>
+    </ul>
+</nav>
+
+
 <h1>{{ service.title }}</h1>
 <p>{{ service.description }}</p>
 
-<p>Категория: 
-    {% if service.category %}
-        {{ service.category.name }}
-    {% else %}
-        Не указана
-    {% endif %}
-</p>
-
-<p>Местоположение: 
-    {% if service.location %}
-        {{ service.location }}
-    {% else %}
-        Не указано
-    {% endif %}
-</p>
+<p>Категория: {{ service.category.name|default:"Не указана" }}</p>
+<p>Местоположение: {{ service.location|default:"Не указано" }}</p>
 
 <h2>Отзывы</h2>
 {% if reviews %}
     {% for review in reviews %}
-        <div class="review">
-            <p>Рейтинг: {{ review.rating }}</p>
+        <div class="review" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+            <p><strong>Рейтинг:</strong> {{ review.rating }}</p>
             <p>{{ review.comment }}</p>
-            <p>От: {{ review.reviewer.username }}</p>
+            <p><em>От: {{ review.reviewer.username }}</em></p>
         </div>
     {% endfor %}
 {% else %}
