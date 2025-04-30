@@ -17,30 +17,27 @@ def home(request):
 
 def service_list(request):
     services = Service.objects.all()
-    paginator = Paginator(services, 10)  # 10 услуг на страницу
+    paginator = Paginator(services, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'service/service_list.html', {'page_obj': page_obj})
 
 @login_required
 def create_service(request):
-    try:
-        if request.method == 'POST':
-            form = ServiceForm(request.POST, request.FILES)
-            if form.is_valid():
-                service = form.save(commit=False)
-                service.provider = request.user
-                service.save()
-                logger.info(f"Услуга '{service.title}' создана пользователем {request.user.username}.")
-                return redirect('home')
+    if request.method == 'POST':
+        form = ServiceForm(request.POST, request.FILES)
+        if form.is_valid():
+            service = form.save(commit=False)
+            service.provider = request.user  # Установка текущего пользователя как провайдера
+            service.save()  # Сохранение услуги в базе данных
+            logger.info(f"Услуга '{service.title}' создана пользователем {request.user.username}.")
+            return redirect('home')  # Перенаправление на главную страницу или страницу деталей услуги
         else:
-            form = ServiceForm()
-        
-        return render(request, 'service/create_service.html', {'form': form})
-    
-    except Exception as e:
-        logger.error(f"Ошибка при создании услуги: {e}", exc_info=True)
-        return render(request, 'service/error.html', {'message': 'Произошла ошибка при создании услуги. Пожалуйста, попробуйте позже.'})
+            logger.warning(f"Ошибка при создании услуги: {form.errors}")
+    else:
+        form = ServiceForm()
+
+    return render(request, 'service/create_service.html', {'form': form})
 
 
 def service_detail(request, service_id):
@@ -48,50 +45,36 @@ def service_detail(request, service_id):
     reviews = service.reviews.select_related('reviewer').all()
     return render(request, 'service/service_detail.html', {'service': service, 'reviews': reviews})
 
-
 @login_required
 def add_review(request, service_id):
     service = get_object_or_404(Service, id=service_id)
     if request.user == service.provider:
         return HttpResponseForbidden("Вы не можете оставить отзыв на свою услугу.")
-    try:
-        if request.method == 'POST':
-            form = ReviewForm(request.POST)
-            if form.is_valid():
-                review = form.save(commit=False)
-                review.service = service
-                review.reviewer = request.user
-                review.save()
-                logger.info(f"Отзыв на услугу '{service.title}' добавлен пользователем {request.user.username}.")
-                return redirect('service_detail', service_id=service.id)
-        else:
-            form = ReviewForm()
-        return render(request, 'service/add_review.html', {'form': form, 'service': service})
-    except Exception as e:
-        logger.error(f"Ошибка при добавлении отзыва: {e}")
-        return render(request, 'service/error.html', {'message': 'Произошла ошибка при добавлении отзыва.'})
-
-
+    
+    form = ReviewForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        review = form.save(commit=False)
+        review.service = service
+        review.reviewer = request.user
+        review.save()
+        logger.info(f"Отзыв на услугу '{service.title}' добавлен пользователем {request.user.username}.")
+        return redirect('service_detail', service_id=service.id)
+    
+    return render(request, 'service/add_review.html', {'form': form, 'service': service})
 
 @login_required
 def send_message(request, receiver_id):
     receiver = get_object_or_404(User, id=receiver_id)
-    try:
-        if request.method == 'POST':
-            form = MessageForm(request.POST)
-            if form.is_valid():
-                message = form.save(commit=False)
-                message.sender = request.user
-                message.receiver = receiver
-                message.save()
-                logger.info(f"Сообщение отправлено от {request.user.username} к {receiver.username}.")
-                return redirect('chat', receiver_id=receiver.id)
-        else:
-            form = MessageForm()
-        return render(request, 'service/send_message.html', {'form': form, 'receiver': receiver})
-    except Exception as e:
-        logger.error(f"Ошибка при отправке сообщения: {e}")
-        return render(request, 'service/error.html', {'message': 'Произошла ошибка при отправке сообщения.'})
+    form = MessageForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        message = form.save(commit=False)
+        message.sender = request.user
+        message.receiver = receiver
+        message.save()
+        logger.info(f"Сообщение отправлено от {request.user.username} к {receiver.username}.")
+        return redirect('chat', receiver_id=receiver.id)
+    
+    return render(request, 'service/send_message.html', {'form': form, 'receiver': receiver})
 
 @login_required
 def chat(request, receiver_id):
@@ -105,36 +88,4 @@ def chat(request, receiver_id):
 def search(request):
     query = request.GET.get('q')
     category = request.GET.get('category')
-    location = request.GET.get('location')
-
-    logger.info(f"Поисковый запрос: query={query}, category={category}, location={location}")
-
-    services = Service.objects.all()
-
-    if not (query or category or location):
-        return render(request, 'service/search_results.html', {'page_obj': None, 'query': query, 'message': "Пожалуйста, введите запрос."})
-
-    if query:
-        services = services.filter(
-            Q(title__icontains=query) | Q(description__icontains=query)
-        )
-    if category:
-        services = services.filter(category__icontains=category)  # Убедитесь, что category - это строка
-    if location:
-        services = services.filter(location__icontains=location)
-
-    # Удаление дубликатов, если это необходимо
-    services = services.distinct()
-
-    # Пагинация
-    paginator = Paginator(services, 10)  # 10 услуг на странице
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'service/search_results.html', {
-        'page_obj': page_obj,
-        'query': query,
-        'category': category,
-        'location': location,
-        'message': "Ничего не найдено." if not page_obj else None,
-    })
+    location = request.GET

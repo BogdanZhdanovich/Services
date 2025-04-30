@@ -140,3 +140,4 @@ LOGOUT_REDIRECT_URL = '/'  # Перенаправление после выхо�
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5' 
+

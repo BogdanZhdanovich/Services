@@ -3,8 +3,19 @@
 {% block content %}
 <div class="container mt-4">
     <h1 class="mb-4">Добавить услугу</h1>
-    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
+    <form method="post" action="{% url 'create_service' %}" class="needs-validation" novalidate enctype="multipart/form-data">
         {% csrf_token %}
+
+        <!-- Отображение ошибок формы -->
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
 
         <!-- Поле "Название услуги" -->
         <div class="mb-3">
@@ -24,7 +35,6 @@
             </div>
         </div>
 
-
         <!-- Поле "Город" -->
         <div class="mb-3">
             <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }}</label>
@@ -33,7 +43,6 @@
                 Пожалуйста, укажите город.
             </div>
         </div>
-
 
         <!-- Поле "Описание услуги" -->
         <div class="mb-3">
@@ -44,10 +53,9 @@
             </div>
         </div>
 
-
         <!-- Поле "Цена" -->
-        <div class="mb-3" id="price-container">
-            <label for="{{ form.price.id_for_label }}" class="form-label">{{ form.price.label }}</label>
+        <div class="mb-3" id="price-container" style="display: none;">
+            <label for="{{ form.price.id }}" class="form-label">{{ form.price.label }}</label>
             <div class="input-group">
                 {{ form.price }}
                 <span class="input-group-text">руб.</span>
@@ -57,28 +65,28 @@
             </div>
         </div>
 
+        <!-- Скрытое поле для передачи значения цены -->
+        <input type="hidden" name="price" value="0" id="hidden-price">
+
         <!-- Кнопки выбора цены -->
         <div class="mb-3">
-            <button type="button" class="btn btn-primary" id="fixed-price-button" onclick="selectFixedPrice()">Выбрать
-                цену</button>
-            <button type="button" class="btn btn-secondary" id="contract-price-button"
-                onclick="selectContractPrice()">Выбрать договорную цену</button>
+            <button type="button" class="btn btn-primary" id="fixed-price-button" onclick="selectFixedPrice()">Выбрать цену</button>
+            <button type="button" class="btn btn-secondary" id="contract-price-button" onclick="selectContractPrice()">Выбрать договорную цену</button>
         </div>
 
         <!-- Текст для отображения договорной цены -->
         <div id="contract-price-text" style="display: none; margin-bottom: 10px;">
             <span style="font-weight: normal;">
-                При договорной цене вы не указываете конкретную цену в объявлении, а даёте возможность покупателю
-                предложить свою.
+                При договорной цене вы не указываете конкретную цену в объявлении, а даёте возможность покупателю предложить свою.
             </span>
         </div>
-
 
         <script>
             function selectFixedPrice() {
                 const priceContainer = document.getElementById("price-container");
                 const contractPriceText = document.getElementById("contract-price-text");
-                const priceInput = document.getElementById("{{ form.price.id_for_label }}");
+                const priceInput = document.getElementById("{{ form.price.id }}");
+                const hiddenPriceInput = document.getElementById("hidden-price");
 
                 // Показываем поле ввода цены
                 priceContainer.style.display = 'block';
@@ -86,64 +94,27 @@
 
                 // Включаем поле ввода
                 priceInput.disabled = false;
+                hiddenPriceInput.value = priceInput.value; // Устанавливаем значение скрытого поля
             }
 
             function selectContractPrice() {
                 const priceContainer = document.getElementById("price-container");
                 const contractPriceText = document.getElementById("contract-price-text");
-                const priceInput = document.getElementById("{{ form.price.id_for_label }}");
+                const priceInput = document.getElementById("{{ form.price.id }}");
+                const hiddenPriceInput = document.getElementById("hidden-price");
 
                 // Скрываем поле ввода цены
                 priceContainer.style.display = 'none';
-
-                // Показываем текст "Договорная цена"
                 contractPriceText.style.display = 'block';
 
                 // Отключаем поле ввода
                 priceInput.value = '';  // Сбрасываем значение поля
                 priceInput.disabled = true;  // Отключаем поле
+                hiddenPriceInput.value = '0'; // Устанавливаем значение скрытого поля
             }
         </script>
-
-        <!-- Кнопки -->
-        <div class="d-flex justify-content-between">
-            <a href="{% url 'home' %}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Назад
-            </a>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Сохранить
-            </button>
-        </div>
+        <!-- Кнопка отправки формы -->
+        <button type="submit" class="btn btn-success">Сохранить услугу</button>
     </form>
 </div>
-
-<script>
-    // Инициализация валидации формы
-    (function () {
-        'use strict'
-
-        // Получаем все формы, к которым нужно применить кастомную валидацию
-        var forms = document.querySelectorAll('.needs-validation')
-
-        // Перебираем формы и предотвращаем отправку, если есть ошибки
-        Array.prototype.slice.call(forms).forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                // Показываем кастомные сообщения об ошибках
-                form.querySelectorAll(':invalid').forEach(function (field) {
-                    var errorElement = form.querySelector(`[data-error="${field.id}"]`);
-                    if (errorElement) {
-                        errorElement.textContent = field.validationMessage || 'Пожалуйста, заполните это поле.';
-                    }
-                });
-
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
-</script>
 {% endblock %}

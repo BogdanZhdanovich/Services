@@ -1,10 +1,6 @@
 from django import forms
 from .models import Service, Review, Message
-from django.contrib.auth.forms import UserCreationForm
-
-
-from django import forms
-from .models import Service
+from django.core.exceptions import ValidationError
 
 class ServiceForm(forms.ModelForm):
     PRICE_CHOICES = [
@@ -25,7 +21,7 @@ class ServiceForm(forms.ModelForm):
         'style': 'width: 150px;'  # Устанавливаем меньшую ширину
     }))
 
-    class Meta:  # Здесь нужно исправить отступ
+    class Meta:  # Исправленный отступ
         model = Service
         fields = ['title', 'description', 'category', 'price_type', 'price', 'location']
 
@@ -37,7 +33,6 @@ class ServiceForm(forms.ModelForm):
         self.fields['price_type'].widget.attrs.update({'class': 'form-check-input'})  # Для радио-кнопок
         self.fields['price'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите цену'})
         self.fields['location'].widget.attrs.update({'class': 'form-control', 'placeholder': 'Введите город'})
-
 
 
 class ReviewForm(forms.ModelForm):
