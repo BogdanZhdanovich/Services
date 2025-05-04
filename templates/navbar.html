@@ -25,6 +25,11 @@
                         <span class="nav-link">{{ user.username }}</span>
                     </li>
 
+                    <!-- Кнопка "Профиль" -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">Профиль</a>
+                    </li>
+
                     <!-- Кнопка "Выход" -->
                     <li class="nav-item">
                         <form method="post" action="{% url 'logout' %}" class="d-inline">

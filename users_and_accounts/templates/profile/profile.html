@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+    <h1>Добро пожаловать, {{ user.username }}!</h1>
+    <p>Email: {{ user.email }}</p>
+    <p>Имя: {{ user.first_name }}</p>
+    <p>Фамилия: {{ user.last_name }}</p>
+
+    {% if profile %}
+        <h2>Информация о профиле:</h2>
+        <p>Дополнительная информация: {{ profile.additional_info }}</p>
+    {% else %}
+        <p>У вас еще нет профиля. Пожалуйста, создайте его.</p>
+    {% endif %}
+{% endblock %}
