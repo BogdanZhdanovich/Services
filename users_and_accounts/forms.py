@@ -3,8 +3,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 
-
-
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=30, required=True, label="Имя")
@@ -22,13 +20,25 @@ class NewUserForm(UserCreationForm):
         }
 
     def save(self, commit=True):
-        user = super(NewUserForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.email = self.cleaned_data['email']
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+
         if commit:
             user.save()
+            # Создание профиля пользователя
+            UserProfile.objects.create(
+                user=user,
+                phone_number=self.cleaned_data['phone_number'],
+                first_name=self.cleaned_data['first_name'],
+                last_name=self.cleaned_data['last_name']
+            )
+        
         return user
+    
+
+
 
 
 class UserProfileForm(forms.ModelForm):

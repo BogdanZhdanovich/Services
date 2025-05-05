@@ -9,15 +9,25 @@ def register(request):
     if request.method == 'POST':
         user_form = NewUserForm(request.POST)
         if user_form.is_valid():
-            user = user_form.save()
-            # Создаем профиль пользователя
-            UserProfile.objects.create(user=user, phone_number=user_form.cleaned_data['phone_number'])
-            return redirect('login')  # Перенаправление на страницу входа после успешной регистрации
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password1'])  # Устанавливаем зашифрованный пароль
+            user.save()  # Сохраняем пользователя
+            
+            # Создаем профиль для нового пользователя
+            profile = UserProfile.objects.create(
+                user=user,
+                phone_number=user_form.cleaned_data['phone_number'],  # Сохранение номера телефона
+                first_name=user_form.cleaned_data['first_name'],
+                last_name=user_form.cleaned_data['last_name']
+            )
+            messages.success(request, 'Профиль успешно создан!')
+            login(request, user)  # Вход пользователя
+            messages.success(request, 'Регистрация прошла успешно!')
+            return redirect('profile')  # Перенаправление на страницу профиля
     else:
         user_form = NewUserForm()
-    
-    return render(request, 'registration/registration_page.html', {'user_form': user_form})
 
+    return render(request, 'registration/registration_page.html', {'user_form': user_form})
 
 @login_required
 def profile_view(request):
@@ -31,17 +41,17 @@ def profile_view(request):
 @login_required
 def edit_profile_view(request):
     try:
-        profile = request.user.userprofile  # Проверяем, существует ли профиль
+        profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
-        profile = None  # Профиль не найден, можно создать новый или обработать это иначе
+        profile = UserProfile(user=request.user)  # Создаем новый профиль, если он не существует
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Профиль успешно обновлен.")
-            return redirect('profile')
+            form.save()  # Сохраняем профиль с установленным user_id
+            messages.success(request, 'Профиль успешно обновлен!')
+            return redirect('profile')  # Перенаправление на страницу профиля
     else:
-        form = UserProfileForm(instance=profile) if profile else UserProfileForm()  # Если профиля нет, создаем пустую форму
+        form = UserProfileForm(instance=profile)
 
-    return render(request, 'profile/edit_profile.html', {'form': form})
+    return render(request, 'edit_profile.html', {'form': form})

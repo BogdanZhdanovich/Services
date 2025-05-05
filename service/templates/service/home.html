@@ -8,18 +8,18 @@
     <form method="get" action="{% url 'search' %}" class="mb-4">
         <div class="row g-3">
             <div class="col-md-4">
-                <input type="text" name="q" class="form-control" placeholder="Поиск услуг">
+                <input type="text" name="q" class="form-control" placeholder="Поиск услуг" value="{{ request.GET.q }}">
             </div>
             <div class="col-md-3">
                 <select name="category" class="form-select">
                     <option value="">Все категории</option>
                     {% for category in categories %}
-                        <option value="{{ category.name }}">{{ category.name }}</option>
+                        <option value="{{ category.name }}" {% if category.name == request.GET.category %}selected{% endif %}>{{ category.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="col-md-3">
-                <input type="text" name="location" class="form-control" placeholder="Введите город">
+                <input type="text" name="location" class="form-control" placeholder="Введите город" value="{{ request.GET.location }}">
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">Найти</button>
@@ -39,6 +39,8 @@
                         <p class="card-text">{{ service.description|truncatechars:100 }}</p>
                         <p class="card-text"><small class="text-muted">Категория: {{ service.category.name }}</small></p>
                         <p class="card-text"><small class="text-muted">Местоположение: {{ service.location }}</small></p>
+                        <p class="card-text"><small class="text-muted">Провайдер: {{ user.first_name  }} {{ user.last_name }}</small></p>
+                        <p class="card-text"><small class="text-muted">Телефон: {{ service.provider.profile.phone_number }}</small></p>
                     </div>
                 </div>
             </div>

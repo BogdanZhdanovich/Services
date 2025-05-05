@@ -9,8 +9,12 @@
                 <div class="list-group-item mb-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5><a href="{% url 'service_detail' service.id %}" class="text-decoration-none">{{ service.title }}</a></h5>
+                            <h5>
+                                <a href="{% url 'service_detail' service.id %}" class="text-decoration-none">{{ service.title }}</a>
+                            </h5>
                             <p class="mb-0">{{ service.description|truncatechars:150 }}</p>
+                            <p class="mb-0"><strong>Создатель:</strong> {{ service.provider.username }}</p>
+                            <p class="mb-0"><strong>Телефон:</strong> {{ service.provider.phone_number }}</p>
                         </div>
                         <span class="badge bg-primary rounded-pill">{{ service.category.name }}</span>
                     </div>

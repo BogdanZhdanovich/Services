@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Service, Category, Review, Message
+from .models import Service, Category, Review, Message, UserProfile
 
 # Регистрация модели Service
 @admin.register(Service)
@@ -27,3 +27,9 @@ class MessageAdmin(admin.ModelAdmin):
     list_display = ('sender', 'receiver', 'timestamp')
     list_filter = ('timestamp',)
     search_fields = ('content',)
+
+# Регистрация модели UserProfile
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone_number')  # Поля, отображаемые в списке
+    search_fields = ('user__username', 'phone_number')  # Поиск по полям
