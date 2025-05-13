@@ -3,17 +3,17 @@
 <nav>
     <ul class="breadcrumb">
         <li><a href="/">Главная</a></li>
-        <li class="separator"> &gt; </li> <!-- Стрелочка -->
+        <li class="separator"> &gt; </li>
         <li class="active">{{ service.title }}</li>
     </ul>
 </nav>
-
 
 <h1>{{ service.title }}</h1>
 <p>{{ service.description }}</p>
 
 <p>Категория: {{ service.category.name|default:"Не указана" }}</p>
 <p>Местоположение: {{ service.location|default:"Не указано" }}</p>
+<p>Цена: {{ service.price }} руб.</p>  <!-- Добавлено отображение цены -->
 
 <h2>Отзывы</h2>
 {% if reviews %}
@@ -25,8 +25,6 @@
         </div>
     {% endfor %}
 {% else %}
-
-
     <p>Нет отзывов для этой услуги.</p>
 {% endif %}
 

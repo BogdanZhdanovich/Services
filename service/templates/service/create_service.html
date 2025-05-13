@@ -40,7 +40,6 @@
             </div>
         </div>
         
-
         <!-- Поле "Город" -->
         <div class="mb-3">
             <label for="{{ form.location.id_for_label }}" class="form-label">{{ form.location.label }}</label>
@@ -60,7 +59,7 @@
         </div>
 
         <!-- Поле "Цена" -->
-        <div class="mb-3" id="price-container" style="display: none;">
+        <div class="mb-3">
             <label for="{{ form.price.id }}" class="form-label">{{ form.price.label }}</label>
             <div class="input-group">
                 {{ form.price }}
@@ -70,38 +69,6 @@
                 Пожалуйста, укажите цену.
             </div>
         </div>
-
-        <!-- Скрытое поле для передачи значения цены -->
-        <input type="hidden" name="price" value="0" id="hidden-price">
-
-        <!-- Кнопка выбора фиксированной цены -->
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary" id="fixed-price-button" onclick="selectFixedPrice()">Выбрать фиксированную цену</button>
-        </div>
-
-        <script>
-            function selectFixedPrice() {
-                const priceContainer = document.getElementById("price-container");
-                const priceInput = document.getElementById("{{ form.price.id }}");
-                const hiddenPriceInput = document.getElementById("hidden-price"); // Исправлено: убрана лишняя строка
-
-                // Показываем поле ввода цены
-                priceContainer.style.display = 'block';
-
-                // Включаем поле ввода
-                priceInput.disabled = false;
-                hiddenPriceInput.value = priceInput.value; // Устанавливаем значение скрытого поля
-
-                // Устанавливаем фокус на поле ввода цены
-                priceInput.focus();
-            }
-
-            // Обновляем значение скрытого поля при изменении цены
-            document.getElementById("{{ form.price.id }}").addEventListener('input', function () {
-                const hiddenPriceInput = document.getElementById("hidden-price");
-                hiddenPriceInput.value = this.value; // Обновляем скрытое поле с текущим значением цены
-            });
-        </script>
 
         <!-- Кнопка отправки формы -->
         <button type="submit" class="btn btn-success">Сохранить услугу</button>
