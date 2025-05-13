@@ -3,18 +3,57 @@
 {% block title %}Профиль пользователя{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
     <h1>Добро пожаловать, {{ user.username }}!</h1>
-    <p>Email: {{ user.email }}</p>
-    <p>Имя: {{ user.first_name }}</p>
-    <p>Фамилия: {{ user.last_name }}</p>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Информация о пользователе</h5>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Имя:</strong> {{ user.first_name }}</p>
+            <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+        </div>
+    </div>
     
     {% if profile %}
-        <p>Номер телефона: {{ profile.phone_number }}</p>
-        <h2>Информация о профиле:</h2>
-        <p>Дополнительная информация: {{ profile.bio }}</p>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Информация о профиле</h5>
+                <p><strong>Номер телефона:</strong> {{ profile.phone_number }}</p>
+                <p><strong>Дополнительная информация:</strong> {{ profile.bio }}</p>
+            </div>
+        </div>
     {% else %}
-        <p>У вас еще нет профиля. Пожалуйста, создайте его.</p>
+        <div class="alert alert-warning" role="alert">
+            У вас еще нет профиля. Пожалуйста, создайте его.
+        </div>
     {% endif %}
     
     <a href="{% url 'edit_profile' %}" class="btn btn-secondary">Редактировать профиль</a>
+    
+    <hr>
+
+    <h2 class="mt-4">Ваши услуги</h2>
+    {% if user.services.all %}
+        <div class="row">
+            {% for service in user.services.all %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'service_detail' service.id %}" class="text-decoration-none">{{ service.title }}</a>
+                            </h5>
+                            <p class="card-text">{{ service.description|truncatechars:150 }}</p>
+                            <p class="mb-0"><strong>Создано:</strong> {{ service.created_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            У вас еще нет созданных услуг.
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

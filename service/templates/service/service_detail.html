@@ -4,8 +4,6 @@
     <ul class="breadcrumb">
         <li><a href="/">Главная</a></li>
         <li class="separator"> &gt; </li> <!-- Стрелочка -->
-        <li><a href="{% url 'service_list' %}">Услуги</a></li>
-        <li class="separator"> &gt; </li> <!-- Стрелочка -->
         <li class="active">{{ service.title }}</li>
     </ul>
 </nav>
@@ -20,13 +18,15 @@
 <h2>Отзывы</h2>
 {% if reviews %}
     {% for review in reviews %}
-        <div class="review" style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+        <div class="review" style="border: 1px solid #ffffff; padding: 10px; margin-bottom: 10px;">
             <p><strong>Рейтинг:</strong> {{ review.rating }}</p>
             <p>{{ review.comment }}</p>
             <p><em>От: {{ review.reviewer.username }}</em></p>
         </div>
     {% endfor %}
 {% else %}
+
+
     <p>Нет отзывов для этой услуги.</p>
 {% endif %}
 

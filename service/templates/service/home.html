@@ -14,7 +14,10 @@
                 <select name="category" class="form-select">
                     <option value="">Все категории</option>
                     {% for category in categories %}
-                        <option value="{{ category.name }}" {% if category.name == request.GET.category %}selected{% endif %}>{{ category.name }}</option>
+                        <option value="{{ category.name }}" 
+                            {% if category.name == request.GET.category %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
@@ -31,16 +34,20 @@
     <div class="row">
         {% for service in services %}
             <div class="col-md-4 mb-4">
-                <div class="card h-100">
+                <div class="card h-100"> <!-- h-100 для равной высоты карточек -->
                     <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{% url 'service_detail' service.id %}">{{ service.title }}</a>
-                        </h5>
-                        <p class="card-text">{{ service.description|truncatechars:100 }}</p>
-                        <p class="card-text"><small class="text-muted">Категория: {{ service.category.name }}</small></p>
-                        <p class="card-text"><small class="text-muted">Местоположение: {{ service.location }}</small></p>
-                        <p class="card-text"><small class="text-muted">Провайдер: {{ user.first_name  }} {{ user.last_name }}</small></p>
-                        <p class="card-text"><small class="text-muted">Телефон: {{ service.provider.profile.phone_number }}</small></p>
+                        <h5 class="card-title mb-1">{{ service.title }}</h5> <!-- Убрали тег <a> -->
+                        <h6 class="card-subtitle mb-2 text-muted d-flex justify-content-between align-items-center">
+                            <small>Категория: {{ service.category.name }}</small>
+                        </h6>
+                        <p class="card-text text-muted" style="color: #6c757d;">{{ service.description|truncatechars:100 }}</p>
+                        <p class="card-text text-muted" style="color: #6c757d;">
+                            <small>Местоположение: {{ service.location }}</small>
+                        </p>
+                        <p class="card-text text-muted" style="color: #6c757d;">
+                            <small>Создатель: {{ service.provider.username }}</small>
+                        </p>
+                        <a href="{% url 'service_detail' service.id %}" class="btn btn-primary">Перейти к услуге</a>
                     </div>
                 </div>
             </div>
@@ -49,6 +56,33 @@
                 <p class="text-center">Услуги не найдены.</p>
             </div>
         {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    <div class="d-flex justify-content-center my-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% if services.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&q={{ request.GET.q }}&category={{ request.GET.category }}&location={{ request.GET.location }}">Первая</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ services.previous_page_number }}&q={{ request.GET.q }}&category={{ request.GET.category }}&location={{ request.GET.location }}">Назад</a>
+                    </li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <span class="page-link">Страница {{ services.number }} из {{ services.paginator.num_pages }}</span>
+                </li>
+                {% if services.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ services.next_page_number }}&q={{ request.GET.q }}&category={{ request.GET.category }}&location={{ request.GET.location }}">Вперед</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ services.paginator.num_pages }}&q={{ request.GET.q }}&category={{ request.GET.category }}&location={{ request.GET.location }}">Последняя</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 </div>
 {% endblock %}

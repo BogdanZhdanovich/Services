@@ -14,15 +14,14 @@ def register(request):
             user.save()  # Сохраняем пользователя
             
             # Создаем профиль для нового пользователя
-            profile = UserProfile.objects.create(
+            UserProfile.objects.create(
                 user=user,
                 phone_number=user_form.cleaned_data['phone_number'],  # Сохранение номера телефона
                 first_name=user_form.cleaned_data['first_name'],
                 last_name=user_form.cleaned_data['last_name']
             )
-            messages.success(request, 'Профиль успешно создан!')
+            messages.success(request, 'Регистрация прошла успешно! Вы можете войти в систему.')
             login(request, user)  # Вход пользователя
-            messages.success(request, 'Регистрация прошла успешно!')
             return redirect('profile')  # Перенаправление на страницу профиля
     else:
         user_form = NewUserForm()
@@ -31,27 +30,21 @@ def register(request):
 
 @login_required
 def profile_view(request):
-    try:
-        profile = request.user.userprofile  # Предполагается, что у вас есть связь OneToOne с UserProfile
-    except UserProfile.DoesNotExist:
-        profile = None  # Профиль не найден
+    profile, created = UserProfile.objects.get_or_create(user=request.user)  # Получаем или создаем профиль
 
     return render(request, 'profile/profile.html', {'user': request.user, 'profile': profile})
 
 @login_required
 def edit_profile_view(request):
-    try:
-        profile = UserProfile.objects.get(user=request.user)
-    except UserProfile.DoesNotExist:
-        profile = UserProfile(user=request.user)  # Создаем новый профиль, если он не существует
+    profile, created = UserProfile.objects.get_or_create(user=request.user)  # Получаем или создаем профиль
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save()  # Сохраняем профиль с установленным user_id
+            form.save()  # Сохраняем профиль
             messages.success(request, 'Профиль успешно обновлен!')
             return redirect('profile')  # Перенаправление на страницу профиля
     else:
         form = UserProfileForm(instance=profile)
 
-    return render(request, 'edit_profile.html', {'form': form})
+    return render(request, 'profile/edit_profile.html', {'form': form})

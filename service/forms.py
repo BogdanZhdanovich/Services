@@ -1,5 +1,5 @@
 from django import forms
-from .models import Service, Review, Message
+from .models import Service, Review, Message, Category
 from django.core.exceptions import ValidationError
 
 class ServiceForm(forms.ModelForm):
@@ -7,6 +7,7 @@ class ServiceForm(forms.ModelForm):
         model = Service
         fields = ['title', 'category', 'location', 'description', 'price']
         
+    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Выберите категорию")
 
     def clean_price(self):
         price = self.cleaned_data.get('price')

@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h1 class="mb-4">Результаты поиска для : {{ query }}</h1>
-    {% if page_obj %}
+    <h1 class="mb-4">Результаты поиска для: {{ query }}</h1>
+    {% if page_obj.paginator.count > 0 %}
         <div class="list-group">
             {% for service in page_obj %}
                 <div class="list-group-item mb-3">
@@ -25,12 +25,12 @@
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1" aria-label="First">
+                        <a class="page-link" href="?page=1&q={{ query }}&category={{ category_name }}&location={{ location }}" aria-label="First">
                             <span aria-hidden="true">&laquo; Первая</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}&category={{ category_name }}&location={{ location }}" aria-label="Previous">
                             <span aria-hidden="true">Предыдущая</span>
                         </a>
                     </li>
@@ -40,12 +40,12 @@
                 </li>
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}&category={{ category_name }}&location={{ location }}" aria-label="Next">
                             <span aria-hidden="true">Следующая</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ query }}&category={{ category_name }}&location={{ location }}" aria-label="Last">
                             <span aria-hidden="true">Последняя &raquo;</span>
                         </a>
                     </li>

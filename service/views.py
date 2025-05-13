@@ -11,16 +11,14 @@ from .forms import ServiceForm, ReviewForm, MessageForm
 logger = logging.getLogger(__name__)
 
 def home(request):
-    services = Service.objects.select_related('provider').all()  # Используем select_related для оптимизации
-    categories = Category.objects.all()
-    return render(request, 'service/home.html', {'services': services, 'categories': categories})
-
-def service_list(request):
-    services = Service.objects.all()
-    paginator = Paginator(services, 10)
+    # Оптимизация выборки с использованием select_related
+    services = Service.objects.select_related('provider').all()
+    paginator = Paginator(services, 9)  # 9 услуг на страницу
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'service/service_list.html', {'page_obj': page_obj})
+    
+    categories = Category.objects.all()
+    return render(request, 'service/home.html', {'services': page_obj, 'categories': categories})
 
 @login_required
 def create_service(request):
@@ -30,10 +28,12 @@ def create_service(request):
             service = form.save(commit=False)
             service.provider = request.user  # Установка текущего пользователя как провайдера
             service.save()
-            return redirect('service_list')  # Переход на страницу списка услуг
+            logger.info(f"Услуга '{service.title}' успешно создана пользователем {request.user.username}.")
+            return redirect('home')  # Перенаправление на домашнюю страницу
     else:
         form = ServiceForm()
     return render(request, 'service/create_service.html', {'form': form})
+
 
 def service_detail(request, service_id):
     service = get_object_or_404(Service.objects.select_related('provider'), id=service_id)
@@ -45,31 +45,38 @@ def add_review(request, service_id):
     service = get_object_or_404(Service, id=service_id)
     if request.user == service.provider:
         return HttpResponseForbidden("Вы не можете оставить отзыв на свою услугу.")
-    
-    form = ReviewForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        review = form.save(commit=False)
-        review.service = service
-        review.reviewer = request.user
-        review.save()
-        logger.info(f"Отзыв на услугу '{service.title}' добавлен пользователем {request.user.username}.")
-        return redirect('service_detail', service_id=service.id)
-    
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.service = service
+            review.reviewer = request.user
+            review.save()
+            logger.info(f"Отзыв на услугу '{service.title}' добавлен пользователем {request.user.username}.")
+            return redirect('service_detail', service_id=service.id)
+    else:
+        form = ReviewForm()
+
     return render(request, 'service/add_review.html', {'form': form, 'service': service})
 
 @login_required
 def send_message(request, receiver_id):
     receiver = get_object_or_404(User, id=receiver_id)
-    form = MessageForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        message = form.save(commit=False)
-        message.sender = request.user
-        message.receiver = receiver
-        message.save()
-        logger.info(f"Сообщение отправлено от {request.user.username} к {receiver.username}.")
-        return redirect('chat', receiver_id=receiver.id)
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = request.user
+            message.receiver = receiver
+            message.save()
+            logger.info(f"Сообщение отправлено от {request.user.username} к {receiver.username}.")
+            return redirect('chat', receiver_id=receiver.id)
+    else:
+        form = MessageForm()
     
     return render(request, 'service/send_message.html', {'form': form, 'receiver': receiver})
+
 
 @login_required
 def chat(request, receiver_id):
@@ -85,7 +92,9 @@ def search(request):
     category_name = request.GET.get('category', '')
     location = request.GET.get('location', '')
 
-    services = Service.objects.select_related('provider').all()  # Используем select_related для оптимизации
+    logger.debug(f"Search query: {query}, Category: {category_name}, Location: {location}")
+
+    services = Service.objects.select_related('provider')
 
     if query:
         services = services.filter(title__icontains=query)
@@ -94,17 +103,16 @@ def search(request):
     if location:
         services = services.filter(location__icontains=location)
 
-    # Пагинация
-    paginator = Paginator(services, 10)  # 10 услуг на страницу
+    logger.debug(f"Filtered services count: {services.count()}")
+
+    paginator = Paginator(services, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     categories = Category.objects.all()
 
     return render(request, 'service/search_results.html', {
-        'services': page_obj,  # Передаем page_obj вместо services
+        'services': page_obj,
         'query': query,
         'categories': categories,
-        'page_obj': page_obj,  # Передаем page_obj в контекст
     })
-
