@@ -38,21 +38,6 @@
             <div class="row">
                 <div class="col-12 col-md-2"></div>
                 <div class="col-12 col-md-8">
-                    <!-- Хлебные крошки -->
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            {% for crumb in breadcrumbs %}
-                            <li class="breadcrumb-item{% if forloop.last %} active{% endif %}">
-                                {% if not forloop.last %}
-                                <a href="{{ crumb.url }}">{{ crumb.name }}</a>
-                                {% else %}
-                                {{ crumb.name }}
-                                {% endif %}
-                            </li>
-                            {% endfor %}
-                        </ol>
-                    </nav>
-
                     <!-- Блок для уведомлений -->
                     {% if messages %}
                     <div class="mt-3">

@@ -1,0 +1,27 @@
+.navbar {
+    background-color: rgba(255, 255, 255, 0.9); /* Полупрозрачный белый фон для верхней строки */
+    background-image: url('/static/images/brick-wall.jpg'); /* Путь к изображению текстуры кирпичной стены */
+    background-size: cover; /* Заставляет изображение покрывать весь фон */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Не повторяет изображение */
+    color: black; /* Цвет текста для общего текста */
+    border-bottom: 2px solid rgba(0, 0, 0, 0.7); /* Линия внизу для отделения от остального контента */
+}
+
+.navbar .navbar-brand {
+    color: black; /* Цвет логотипа */
+    font-weight: 600; /* Чуть менее жирный текст для логотипа */
+}
+
+.navbar .nav-link {
+    color: black; /* Цвет ссылок */
+    font-weight: 600; /* Чуть менее жирный текст для ссылок */
+}
+
+.navbar .nav-link:hover {
+    color: rgba(0, 0, 0, 0.8); /* Цвет ссылок при наведении */
+}
+
+.navbar .nav-link.active {
+    color: #0056b3; /* Цвет активной ссылки (можно изменить) */
+}
