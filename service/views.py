@@ -99,7 +99,7 @@ def search(request):
     if query:
         services = services.filter(title__icontains=query)
     if category_name:
-        services = services.filter(category__name__icontains=category_name)
+        services = services.filter(category__icontains=category_name)  # Исправлено здесь
     if location:
         services = services.filter(location__icontains=location)
 
