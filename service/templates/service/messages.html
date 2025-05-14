@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Сообщения</h1>
+
+    {% if contacts %}
+        <h2>Список контактов</h2>
+        <ul class="list-group">
+            {% for contact in contacts %}
+                <li class="list-group-item">
+                    <a href="{% url 'chat_with_user' contact.username %}" class="text-decoration-none">{{ contact.username }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            У вас нет контактов.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

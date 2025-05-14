@@ -4,6 +4,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile
+from service.models import Service
 
 def register(request):
     if request.method == 'POST':
@@ -31,8 +32,13 @@ def register(request):
 @login_required
 def profile_view(request):
     profile, created = UserProfile.objects.get_or_create(user=request.user)  # Получаем или создаем профиль
+    services = Service.objects.filter(provider=request.user)  # Извлекаем услуги текущего пользователя
 
-    return render(request, 'profile/profile.html', {'user': request.user, 'profile': profile})
+    return render(request, 'profile/profile.html', {
+        'user': request.user,
+        'profile': profile,
+        'services': services,  # Передаем услуги в контекст
+    })
 
 @login_required
 def edit_profile_view(request):

@@ -11,9 +11,8 @@ from .forms import ServiceForm, ReviewForm, MessageForm
 logger = logging.getLogger(__name__)
 
 def home(request):
-    # Оптимизация выборки с использованием select_related
     services = Service.objects.select_related('provider').all()
-    paginator = Paginator(services, 9)  # 9 услуг на страницу
+    paginator = Paginator(services, 9)  
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     
@@ -26,10 +25,10 @@ def create_service(request):
         form = ServiceForm(request.POST)
         if form.is_valid():
             service = form.save(commit=False)
-            service.provider = request.user  # Установка текущего пользователя как провайдера
+            service.provider = request.user 
             service.save()
             logger.info(f"Услуга '{service.title}' успешно создана пользователем {request.user.username}.")
-            return redirect('home')  # Перенаправление на домашнюю страницу
+            return redirect('home') 
     else:
         form = ServiceForm()
     return render(request, 'service/create_service.html', {'form': form})
@@ -63,6 +62,7 @@ def add_review(request, service_id):
 @login_required
 def send_message(request, receiver_id):
     receiver = get_object_or_404(User, id=receiver_id)
+    form = MessageForm()  # Инициализация формы
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -72,8 +72,6 @@ def send_message(request, receiver_id):
             message.save()
             logger.info(f"Сообщение отправлено от {request.user.username} к {receiver.username}.")
             return redirect('chat', receiver_id=receiver.id)
-    else:
-        form = MessageForm()
     
     return render(request, 'service/send_message.html', {'form': form, 'receiver': receiver})
 
@@ -85,6 +83,7 @@ def chat(request, receiver_id):
         Q(sender=request.user, receiver=receiver) |
         Q(sender=receiver, receiver=request.user)
     ).order_by('timestamp')
+
     return render(request, 'service/chat.html', {'messages': messages, 'receiver': receiver})
 
 def search(request):
@@ -116,3 +115,78 @@ def search(request):
         'query': query,
         'categories': categories,
     })
+
+
+@login_required
+def edit_service(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+    
+    if request.user != service.provider:
+        return HttpResponseForbidden("Вы не можете редактировать эту услугу.")
+
+    if request.method == 'POST':
+        form = ServiceForm(request.POST, instance=service)
+        if form.is_valid():
+            form.save()
+            logger.info(f"Услуга '{service.title}' была обновлена пользователем {request.user.username}.")
+            return redirect('service_detail', service_id=service.id)
+    else:
+        form = ServiceForm(instance=service)
+    
+    return render(request, 'service/service_edit.html', {'form': form, 'service': service})
+
+
+@login_required
+def confirm_delete_service(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+    
+    if request.user != service.provider:
+        return HttpResponseForbidden("Вы не можете удалить эту услугу.")
+
+    if request.method == 'POST':
+        service.delete()
+        logger.info(f"Услуга '{service.title}' была удалена пользователем {request.user.username}.")
+        return redirect('home')  # Или на другую страницу, например, на страницу со списком услуг
+    
+    return render(request, 'service/service_confirm_delete.html', {'service': service})
+
+
+@login_required
+def profile_view(request):
+    user = request.user
+    profile = user.profile  # Предположим, что у вас есть профиль
+    services = user.services.all()  # Получите услуги пользователя
+
+    # Получите непрочитанные сообщения
+    unread_messages = user.received_messages.filter(is_read=False)
+
+    context = {
+        'user': user,
+        'profile': profile,
+        'services': services,
+        'unread_messages': unread_messages,
+    }
+    
+    return render(request, 'profile.html', context)
+
+
+@login_required
+def message_detail(request, message_id):
+    message = get_object_or_404(Message, id=message_id)
+    if request.user not in [message.sender, message.receiver]:
+        return HttpResponseForbidden("Вы не имеете доступа к этому сообщению.")
+    
+    # Обновление статуса сообщения как прочитанное
+    message.is_read = True
+    message.save()
+    
+    return render(request, 'service/message_detail.html', {'message': message})
+
+
+def chat_list(request):
+    # Получаем всех пользователей, с которыми есть переписка
+    users = User.objects.filter(
+        Q(message__sender=request.user) | Q(message__receiver=request.user)
+    ).distinct()
+
+    return render(request, 'service/chat_list.html', {'users': users})

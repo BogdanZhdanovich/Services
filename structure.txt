@@ -5,6 +5,8 @@ FullName : D:\python\my_project\service
 
 FullName : D:\python\my_project\service_exchange
 
+FullName : D:\python\my_project\static
+
 FullName : D:\python\my_project\templates
 
 FullName : D:\python\my_project\users_and_accounts
@@ -109,6 +111,12 @@ FullName : D:\python\my_project\service\migrations\0010_message_is_read_userprof
 
 FullName : D:\python\my_project\service\migrations\0011_alter_review_unique_together_remove_message_is_read_and_more.py
 
+FullName : D:\python\my_project\service\migrations\0012_rename_timestamp_message_created_at_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0013_rename_recipient_message_receiver_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0014_message_is_read.py
+
 FullName : D:\python\my_project\service\templates\service
 
 FullName : D:\python\my_project\service\__pycache__\__init__.cpython-312.pyc
@@ -144,6 +152,16 @@ FullName : D:\python\my_project\service_exchange\__pycache__\settings.cpython-31
 FullName : D:\python\my_project\service_exchange\__pycache__\urls.cpython-312.pyc
 
 FullName : D:\python\my_project\service_exchange\__pycache__\wsgi.cpython-312.pyc
+
+FullName : D:\python\my_project\static\css
+
+FullName : D:\python\my_project\static\images
+
+FullName : D:\python\my_project\static\js
+
+FullName : D:\python\my_project\static\css\styles.css
+
+FullName : D:\python\my_project\static\images\brick-wall.jpg
 
 FullName : D:\python\my_project\templates\base.html
 

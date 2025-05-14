@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Сообщение от {{ message.sender.username }}</h1>
+<p>{{ message.content }}</p>
+<p>Получено: {{ message.timestamp }}</p>
+<a href="{% url 'chat' receiver_id=message.receiver.id %}">Назад к чату</a>
+{% endblock %}
