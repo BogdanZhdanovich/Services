@@ -98,7 +98,7 @@ def search(request):
     if query:
         services = services.filter(title__icontains=query)
     if category_name:
-        services = services.filter(category__icontains=category_name)  # Исправлено здесь
+        services = services.filter(category__iexact=category_name)  # Исправлено здесь
     if location:
         services = services.filter(location__icontains=location)
 
@@ -113,6 +113,8 @@ def search(request):
     return render(request, 'service/search_results.html', {
         'services': page_obj,
         'query': query,
+        'category_name': category_name,  
+        'location': location,              
         'categories': categories,
     })
 
@@ -181,12 +183,3 @@ def message_detail(request, message_id):
     message.save()
     
     return render(request, 'service/message_detail.html', {'message': message})
-
-
-def chat_list(request):
-    # Получаем всех пользователей, с которыми есть переписка
-    users = User.objects.filter(
-        Q(message__sender=request.user) | Q(message__receiver=request.user)
-    ).distinct()
-
-    return render(request, 'service/chat_list.html', {'users': users})
