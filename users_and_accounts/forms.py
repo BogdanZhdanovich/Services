@@ -27,7 +27,6 @@ class NewUserForm(UserCreationForm):
 
         if commit:
             user.save()
-            # Создание профиля пользователя
             UserProfile.objects.create(
                 user=user,
                 phone_number=self.cleaned_data['phone_number'],

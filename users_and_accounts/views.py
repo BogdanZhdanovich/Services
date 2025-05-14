@@ -11,19 +11,18 @@ def register(request):
         user_form = NewUserForm(request.POST)
         if user_form.is_valid():
             user = user_form.save(commit=False)
-            user.set_password(user_form.cleaned_data['password1'])  # Устанавливаем зашифрованный пароль
-            user.save()  # Сохраняем пользователя
+            user.set_password(user_form.cleaned_data['password1'])  
+            user.save()  
             
-            # Создаем профиль для нового пользователя
             UserProfile.objects.create(
                 user=user,
-                phone_number=user_form.cleaned_data['phone_number'],  # Сохранение номера телефона
+                phone_number=user_form.cleaned_data['phone_number'], 
                 first_name=user_form.cleaned_data['first_name'],
                 last_name=user_form.cleaned_data['last_name']
             )
             messages.success(request, 'Регистрация прошла успешно! Вы можете войти в систему.')
-            login(request, user)  # Вход пользователя
-            return redirect('profile')  # Перенаправление на страницу профиля
+            login(request, user)  
+            return redirect('profile') 
     else:
         user_form = NewUserForm()
 
@@ -31,25 +30,25 @@ def register(request):
 
 @login_required
 def profile_view(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)  # Получаем или создаем профиль
-    services = Service.objects.filter(provider=request.user)  # Извлекаем услуги текущего пользователя
+    profile, created = UserProfile.objects.get_or_create(user=request.user)  
+    services = Service.objects.filter(provider=request.user)  
 
     return render(request, 'profile/profile.html', {
         'user': request.user,
         'profile': profile,
-        'services': services,  # Передаем услуги в контекст
+        'services': services,  
     })
 
 @login_required
 def edit_profile_view(request):
-    profile, created = UserProfile.objects.get_or_create(user=request.user)  # Получаем или создаем профиль
+    profile, created = UserProfile.objects.get_or_create(user=request.user)  
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save()  # Сохраняем профиль
+            form.save() 
             messages.success(request, 'Профиль успешно обновлен!')
-            return redirect('profile')  # Перенаправление на страницу профиля
+            return redirect('profile')  
     else:
         form = UserProfileForm(instance=profile)
 

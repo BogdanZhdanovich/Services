@@ -19,8 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('service.urls')),  # Подключите URL-адреса приложения service
-
+    path('', include('service.urls')),  
     path('accounts/', include('users_and_accounts.urls')),
 ]
 

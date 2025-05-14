@@ -62,7 +62,7 @@ def add_review(request, service_id):
 @login_required
 def send_message(request, receiver_id):
     receiver = get_object_or_404(User, id=receiver_id)
-    form = MessageForm()  # Инициализация формы
+    form = MessageForm()
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
@@ -98,7 +98,7 @@ def search(request):
     if query:
         services = services.filter(title__icontains=query)
     if category_name:
-        services = services.filter(category__iexact=category_name)  # Исправлено здесь
+        services = services.filter(category__iexact=category_name) 
     if location:
         services = services.filter(location__icontains=location)
 
@@ -148,7 +148,7 @@ def confirm_delete_service(request, service_id):
     if request.method == 'POST':
         service.delete()
         logger.info(f"Услуга '{service.title}' была удалена пользователем {request.user.username}.")
-        return redirect('home')  # Или на другую страницу, например, на страницу со списком услуг
+        return redirect('home') 
     
     return render(request, 'service/service_confirm_delete.html', {'service': service})
 
@@ -156,10 +156,9 @@ def confirm_delete_service(request, service_id):
 @login_required
 def profile_view(request):
     user = request.user
-    profile = user.profile  # Предположим, что у вас есть профиль
-    services = user.services.all()  # Получите услуги пользователя
+    profile = user.profile  
+    services = user.services.all() 
 
-    # Получите непрочитанные сообщения
     unread_messages = user.received_messages.filter(is_read=False)
 
     context = {
@@ -178,7 +177,6 @@ def message_detail(request, message_id):
     if request.user not in [message.sender, message.receiver]:
         return HttpResponseForbidden("Вы не имеете доступа к этому сообщению.")
     
-    # Обновление статуса сообщения как прочитанное
     message.is_read = True
     message.save()
     
