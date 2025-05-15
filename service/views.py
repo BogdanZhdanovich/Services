@@ -7,6 +7,7 @@ from django.http import HttpResponseForbidden
 import logging
 from .models import Service, Review, Message, Category
 from .forms import ServiceForm, ReviewForm, MessageForm
+from users_and_accounts.models import UserProfile
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +35,15 @@ def create_service(request):
     return render(request, 'service/create_service.html', {'form': form})
 
 
-def service_detail(request, service_id):
-    service = get_object_or_404(Service.objects.select_related('provider'), id=service_id)
-    reviews = service.reviews.select_related('reviewer').all()
-    return render(request, 'service/service_detail.html', {'service': service, 'reviews': reviews})
+def service_detail_view(request, service_id):
+    service = get_object_or_404(Service, id=service_id)
+    provider_profile = UserProfile.objects.get(user=service.provider)  
+
+    return render(request, 'service/service_detail.html', {
+        'service': service,
+        'provider_profile': provider_profile,  
+        'phone_number': provider_profile.phone_number,  
+    })
 
 @login_required
 def add_review(request, service_id):

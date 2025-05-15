@@ -13,7 +13,9 @@
 
 <p>Категория: {{ service.category.name|default:"Не указана" }}</p>
 <p>Местоположение: {{ service.location|default:"Не указано" }}</p>
-<p>Цена: {{ service.price }} руб.</p> 
+<p>Цена: {{ service.price }} руб.</p>
+<p>Номер телефона: {{ provider_profile.phone_number|default:"Не указан" }}</p>
+<p>Провайдер: {{ provider_profile.first_name }} {{ provider_profile.last_name }}</p>
 
 <h2>Отзывы</h2>
 {% if reviews %}

@@ -37,16 +37,14 @@ class NewUserForm(UserCreationForm):
         return user
     
 
-
-
-
 class UserProfileForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True, label="Имя")
+    last_name = forms.CharField(max_length=30, required=True, label="Фамилия")
+
     class Meta:
         model = UserProfile
         fields = ['bio', 'phone_number', 'first_name', 'last_name']
         labels = {
             'bio': 'О себе',
             'phone_number': 'Номер телефона',
-            'first_name': 'Имя',
-            'last_name': 'Фамилия',
         }

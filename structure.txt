@@ -1,0 +1,223 @@
+
+FullName : D:\python\my_project\.venv
+
+FullName : D:\python\my_project\service
+
+FullName : D:\python\my_project\service_exchange
+
+FullName : D:\python\my_project\static
+
+FullName : D:\python\my_project\templates
+
+FullName : D:\python\my_project\users_and_accounts
+
+FullName : D:\python\my_project\.env.example
+
+FullName : D:\python\my_project\.env.local
+
+FullName : D:\python\my_project\.gitignore
+
+FullName : D:\python\my_project\db.sqlite3
+
+FullName : D:\python\my_project\manage.py
+
+FullName : D:\python\my_project\requirements.txt
+
+FullName : D:\python\my_project\structure.txt
+
+FullName : D:\python\my_project\.venv\Include
+
+FullName : D:\python\my_project\.venv\Lib
+
+FullName : D:\python\my_project\.venv\Scripts
+
+FullName : D:\python\my_project\.venv\pyvenv.cfg
+
+FullName : D:\python\my_project\.venv\Lib\site-packages
+
+FullName : D:\python\my_project\.venv\Scripts\activate
+
+FullName : D:\python\my_project\.venv\Scripts\activate.bat
+
+FullName : D:\python\my_project\.venv\Scripts\Activate.ps1
+
+FullName : D:\python\my_project\.venv\Scripts\deactivate.bat
+
+FullName : D:\python\my_project\.venv\Scripts\django-admin.exe
+
+FullName : D:\python\my_project\.venv\Scripts\dotenv.exe
+
+FullName : D:\python\my_project\.venv\Scripts\normalizer.exe
+
+FullName : D:\python\my_project\.venv\Scripts\pip.exe
+
+FullName : D:\python\my_project\.venv\Scripts\pip3.12.exe
+
+FullName : D:\python\my_project\.venv\Scripts\pip3.exe
+
+FullName : D:\python\my_project\.venv\Scripts\python.exe
+
+FullName : D:\python\my_project\.venv\Scripts\pythonw.exe
+
+FullName : D:\python\my_project\.venv\Scripts\sqlformat.exe
+
+FullName : D:\python\my_project\service\__pycache__
+
+FullName : D:\python\my_project\service\migrations
+
+FullName : D:\python\my_project\service\templates
+
+FullName : D:\python\my_project\service\__init__.py
+
+FullName : D:\python\my_project\service\admin.py
+
+FullName : D:\python\my_project\service\apps.py
+
+FullName : D:\python\my_project\service\forms.py
+
+FullName : D:\python\my_project\service\models.py
+
+FullName : D:\python\my_project\service\tests.py
+
+FullName : D:\python\my_project\service\urls.py
+
+FullName : D:\python\my_project\service\views.py
+
+FullName : D:\python\my_project\service\migrations\__pycache__
+
+FullName : D:\python\my_project\service\migrations\__init__.py
+
+FullName : D:\python\my_project\service\migrations\0001_initial.py
+
+FullName : D:\python\my_project\service\migrations\0002_category.py
+
+FullName : D:\python\my_project\service\migrations\0003_remove_service_location_service_image_service_price_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0004_service_location.py
+
+FullName : D:\python\my_project\service\migrations\0005_remove_service_image.py
+
+FullName : D:\python\my_project\service\migrations\0006_alter_service_category_alter_service_created_at_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0007_alter_service_category.py
+
+FullName : D:\python\my_project\service\migrations\0008_alter_service_category_alter_service_created_at_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0009_userprofile.py
+
+FullName : D:\python\my_project\service\migrations\0010_message_is_read_userprofile_address_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0011_alter_review_unique_together_remove_message_is_read_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0012_rename_timestamp_message_created_at_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0013_rename_recipient_message_receiver_and_more.py
+
+FullName : D:\python\my_project\service\migrations\0014_message_is_read.py
+
+FullName : D:\python\my_project\service\templates\service
+
+FullName : D:\python\my_project\service\__pycache__\__init__.cpython-312.pyc
+
+FullName : D:\python\my_project\service\__pycache__\admin.cpython-312.pyc
+
+FullName : D:\python\my_project\service\__pycache__\apps.cpython-312.pyc
+
+FullName : D:\python\my_project\service\__pycache__\forms.cpython-312.pyc
+
+FullName : D:\python\my_project\service\__pycache__\models.cpython-312.pyc
+
+FullName : D:\python\my_project\service\__pycache__\urls.cpython-312.pyc
+
+FullName : D:\python\my_project\service\__pycache__\views.cpython-312.pyc
+
+FullName : D:\python\my_project\service_exchange\__pycache__
+
+FullName : D:\python\my_project\service_exchange\__init__.py
+
+FullName : D:\python\my_project\service_exchange\asgi.py
+
+FullName : D:\python\my_project\service_exchange\settings.py
+
+FullName : D:\python\my_project\service_exchange\urls.py
+
+FullName : D:\python\my_project\service_exchange\wsgi.py
+
+FullName : D:\python\my_project\service_exchange\__pycache__\__init__.cpython-312.pyc
+
+FullName : D:\python\my_project\service_exchange\__pycache__\settings.cpython-312.pyc
+
+FullName : D:\python\my_project\service_exchange\__pycache__\urls.cpython-312.pyc
+
+FullName : D:\python\my_project\service_exchange\__pycache__\wsgi.cpython-312.pyc
+
+FullName : D:\python\my_project\static\css
+
+FullName : D:\python\my_project\static\images
+
+FullName : D:\python\my_project\static\js
+
+FullName : D:\python\my_project\static\css\styles.css
+
+FullName : D:\python\my_project\static\images\brick-wall.jpg
+
+FullName : D:\python\my_project\templates\base.html
+
+FullName : D:\python\my_project\templates\navbar.html
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__
+
+FullName : D:\python\my_project\users_and_accounts\migrations
+
+FullName : D:\python\my_project\users_and_accounts\templates
+
+FullName : D:\python\my_project\users_and_accounts\__init__.py
+
+FullName : D:\python\my_project\users_and_accounts\admin.py
+
+FullName : D:\python\my_project\users_and_accounts\apps.py
+
+FullName : D:\python\my_project\users_and_accounts\forms.py
+
+FullName : D:\python\my_project\users_and_accounts\models.py
+
+FullName : D:\python\my_project\users_and_accounts\signals.py
+
+FullName : D:\python\my_project\users_and_accounts\tests.py
+
+FullName : D:\python\my_project\users_and_accounts\urls.py
+
+FullName : D:\python\my_project\users_and_accounts\views.py
+
+FullName : D:\python\my_project\users_and_accounts\migrations\__pycache__
+
+FullName : D:\python\my_project\users_and_accounts\migrations\__init__.py
+
+FullName : D:\python\my_project\users_and_accounts\migrations\0001_initial.py
+
+FullName : D:\python\my_project\users_and_accounts\migrations\0002_userprofile_first_name_userprofile_last_name_and_more.py
+
+FullName : D:\python\my_project\users_and_accounts\migrations\0003_alter_userprofile_user.py
+
+FullName : D:\python\my_project\users_and_accounts\migrations\0004_alter_userprofile_user.py
+
+FullName : D:\python\my_project\users_and_accounts\templates\profile
+
+FullName : D:\python\my_project\users_and_accounts\templates\registration
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\__init__.cpython-312.pyc
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\admin.cpython-312.pyc
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\apps.cpython-312.pyc
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\forms.cpython-312.pyc
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\models.cpython-312.pyc
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\signals.cpython-312.pyc
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\urls.cpython-312.pyc
+
+FullName : D:\python\my_project\users_and_accounts\__pycache__\views.cpython-312.pyc
+

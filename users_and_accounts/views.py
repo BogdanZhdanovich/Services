@@ -46,10 +46,24 @@ def edit_profile_view(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=profile)
         if form.is_valid():
-            form.save() 
+            # Сохраняем изменения в профиле
+            form.save()
+
+            # Обновляем имя и фамилию пользователя
+            request.user.first_name = form.cleaned_data.get('first_name', request.user.first_name)
+            request.user.last_name = form.cleaned_data.get('last_name', request.user.last_name)
+            request.user.save()  # Сохраняем изменения в User
+
             messages.success(request, 'Профиль успешно обновлен!')
             return redirect('profile')  
     else:
-        form = UserProfileForm(instance=profile)
+        # Создаем форму с текущими данными
+        initial_data = {
+            'bio': profile.bio,
+            'phone_number': profile.phone_number,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+        }
+        form = UserProfileForm(initial=initial_data)
 
     return render(request, 'profile/edit_profile.html', {'form': form})
