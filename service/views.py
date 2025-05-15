@@ -99,12 +99,12 @@ def search(request):
 
     logger.debug(f"Search query: {query}, Category: {category_name}, Location: {location}")
 
-    services = Service.objects.select_related('provider')
+    services = Service.objects.select_related('provider').order_by('title')  # Добавлено order_by
 
     if query:
         services = services.filter(title__icontains=query)
     if category_name:
-        services = services.filter(category__iexact=category_name) 
+        services = services.filter(category__name__iexact=category_name)
     if location:
         services = services.filter(location__icontains=location)
 
@@ -174,7 +174,7 @@ def profile_view(request):
         'unread_messages': unread_messages,
     }
     
-    return render(request, 'profile.html', context)
+    return render(request, 'profile/profile.html', context)
 
 
 @login_required

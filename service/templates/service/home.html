@@ -14,10 +14,7 @@
                 <select name="category" class="form-select">
                     <option value="">Все категории</option>
                     {% for category in categories %}
-                        <option value="{{ category.name }}" 
-                            {% if category.name == request.GET.category %}selected{% endif %}>
-                            {{ category.name }}
-                        </option>
+                    <option value="{{ category.name }}" {% if category.name == request.GET.category %}selected{% endif %}>{{ category.name }}</option>
                     {% endfor %}
                 </select>
             </div>

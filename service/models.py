@@ -6,20 +6,22 @@ from django.contrib.auth.models import AbstractUser, Group, Permission, User
 class Service(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название услуги")
     description = models.TextField(verbose_name="Описание услуги")
-    category = models.CharField(max_length=100, verbose_name="Категория")
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name="Категория")  # Используем строку
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена", default=0)
     provider = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Поставщик услуги")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     location = models.CharField(max_length=100, default='', verbose_name="Город")
+
     def __str__(self):
         return self.title
 
+
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+    name = models.CharField(max_length=100, verbose_name="Название категории")
 
     def __str__(self):
         return self.name
+
 
 
 class Review(models.Model):
@@ -51,3 +53,4 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+    

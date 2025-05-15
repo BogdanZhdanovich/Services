@@ -6,14 +6,38 @@ class ServiceForm(forms.ModelForm):
     class Meta:
         model = Service
         fields = ['title', 'category', 'location', 'description', 'price']
+        error_messages = {
+            'title': {
+                'required': "Название услуги обязательно для заполнения.",
+            },
+            'category': {
+                'required': "Пожалуйста, выберите категорию.",
+            },
+            'location': {
+                'required': "Город обязательно для заполнения.",
+            },
+            'description': {
+                'required': "Описание услуги обязательно для заполнения.",
+            },
+            'price': {
+                'required': "Цена обязательно для заполнения.",
+            },
+        }
         
-    category = forms.ModelChoiceField(queryset=Category.objects.all(), empty_label="Выберите категорию")
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        empty_label="Выберите категорию",
+        error_messages={
+            'required': "Пожалуйста, выберите категорию."
+        }
+    )
 
     def clean_price(self):
         price = self.cleaned_data.get('price')
         if price is not None and price < 0:
             raise forms.ValidationError("Цена не может быть отрицательной.")
         return price
+
 
 
 class ReviewForm(forms.ModelForm):
